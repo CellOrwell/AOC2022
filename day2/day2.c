@@ -2,15 +2,16 @@
 #include <string.h>
 #include <stdlib.h>
 
-int shapeScore(char);
-int hasWon(char, int);
+int shapeScore(char, int);
+int elfShapeScore(char);
+int winLose(char);
 
 int main(int argc, char **argv)
 {
     char elfChoice, myChoice;
     char *fname = "day2.txt";
     char buf[256];
-    int totScore, myShape;
+    int totScore, elfShape;
     FILE *file;
 
     if(!(file = fopen(fname, "r")))
@@ -24,8 +25,8 @@ int main(int argc, char **argv)
     while(fgets(buf, 256, file) != NULL)
     {
         sscanf(buf, "%c %c", &elfChoice, &myChoice);
-        myShape = shapeScore(myChoice);
-        totScore += (myShape + hasWon(elfChoice, myShape));
+        elfShape = elfShapeScore(elfChoice);
+        totScore += (winLose(myChoice) + shapeScore(myChoice, elfShape));
     }
 
     printf("My total score: %d\n", totScore);
@@ -35,26 +36,19 @@ int main(int argc, char **argv)
     return 0;
 }
 
-int hasWon(char c, int score)
+int elfShapeScore(char c)
 {
     int finScore = 0;
     switch (c)
     {
         case 'A':
-            finScore = 3 * score;
-            if (finScore > 6)
-                finScore = 0;
-            return finScore;
+            return 1;
             break;
         case 'B':
-            finScore = 3 * (score-1);
-            return finScore;
+            return 2;
             break;
         case 'C':
-            finScore = 3 * (score-2);
-            if (finScore < 0)
-                finScore = 6;
-            return finScore;
+            return 3;
             break;
         default:
             return 0;
@@ -62,18 +56,50 @@ int hasWon(char c, int score)
     }
 }
 
-int shapeScore(char c)
+int shapeScore(char c, int elfScore)
 {
     switch (c)
     {
         case 'X':
-            return 1;
+            elfScore -= 1;
             break;
         case 'Y':
-            return 2;
+            /*do nothing*/
             break;
         case 'Z':
+            elfScore += 1;
+            break;
+        default:
+            return 0;
+            break;
+    }
+
+    if(elfScore <= 0)
+    {
+        return 3;
+    }
+    else if(elfScore > 3)
+    {
+        return 1;
+    }
+    else
+    {
+        return elfScore;
+    }
+}
+
+int winLose(char c)
+{
+    switch (c)
+    {
+        case 'X':
+            return 0;
+            break;
+        case 'Y':
             return 3;
+            break;
+        case 'Z':
+            return 6;
             break;
         default:
             return 0;
