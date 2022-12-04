@@ -21,7 +21,6 @@ int main(int argc, char **argv)
 
     while(fgets(buf, 256, file) != NULL)
     {
-        printf("%s", buf);
         if(groupCount < 3)
         {
             if(groupCount == 0)
