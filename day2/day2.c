@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
+#include <unistd.h>
 
 int shapeScore(char, int);
 int elfShapeScore(char);
@@ -8,11 +10,14 @@ int winLose(char);
 
 int main(int argc, char **argv)
 {
+    double time = 0.0;
     char elfChoice, myChoice;
     char *fname = "day2.txt";
     char buf[256];
     int totScore, elfShape;
     FILE *file;
+
+    clock_t begin = clock();
 
     if(!(file = fopen(fname, "r")))
     {
@@ -32,6 +37,12 @@ int main(int argc, char **argv)
     printf("My total score: %d\n", totScore);
 
     fclose(file);
+
+    clock_t end = clock();
+
+    time += (double)(end-begin) / CLOCKS_PER_SEC;
+
+    printf("Elapsed time: %f seconds\n", time);
 
     return 0;
 }
